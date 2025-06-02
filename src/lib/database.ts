@@ -461,16 +461,27 @@ export async function leaveFlightGroup(userId: string, groupId: string): Promise
   return true
 }
 
-// Date Group Functions
+// Date Group Functions - FIXED for timezone issues
 export async function checkDateGroupExists(startDate: string, endDate: string): Promise<DateGroup | null> {
+  // Ensure dates are in YYYY-MM-DD format
+  const formattedStartDate = startDate.includes('T') ? startDate.split('T')[0] : startDate
+  const formattedEndDate = endDate.includes('T') ? endDate.split('T')[0] : endDate
+
+  console.log('Checking for existing date group:', { formattedStartDate, formattedEndDate })
+
   const { data, error } = await supabase
     .from('date_groups')
     .select('*')
-    .eq('start_date', startDate)
-    .eq('end_date', endDate)
+    .eq('start_date', formattedStartDate)
+    .eq('end_date', formattedEndDate)
     .single()
 
-  if (error) return null
+  if (error) {
+    console.log('No existing date group found or error:', error.message)
+    return null
+  }
+  
+  console.log('Found existing date group:', data)
   return data
 }
 
@@ -479,17 +490,30 @@ export async function createDateGroup(data: {
   end_date: string
   creator_id: string
 }): Promise<DateGroup> {
+  // Ensure dates are in YYYY-MM-DD format without timezone conversion
+  const formattedStartDate = data.start_date.includes('T') ? data.start_date.split('T')[0] : data.start_date
+  const formattedEndDate = data.end_date.includes('T') ? data.end_date.split('T')[0] : data.end_date
+
+  const insertData = {
+    start_date: formattedStartDate,
+    end_date: formattedEndDate,
+    creator_id: data.creator_id
+  }
+
+  console.log('Creating date group with data:', insertData)
+
   const { data: group, error } = await supabase
     .from('date_groups')
-    .insert([data])
+    .insert([insertData])
     .select()
     .single()
 
   if (error) {
     console.error('Error creating date group:', error)
-    throw new Error('Failed to create date group')
+    throw new Error('Failed to create date group: ' + error.message)
   }
 
+  console.log('Date group created successfully:', group)
   return group
 }
 
@@ -510,6 +534,13 @@ export async function getAllDateGroups(): Promise<any[]> {
     console.error('Error fetching date groups:', error)
     return []
   }
+
+  // Log the fetched data to verify dates are correct
+  console.log('Fetched date groups:', data?.map(g => ({ 
+    id: g.id, 
+    start_date: g.start_date, 
+    end_date: g.end_date 
+  })))
 
   return data || []
 }
@@ -552,23 +583,6 @@ export async function leaveDateGroup(userId: string, groupId: string): Promise<b
   return true
 }
 
-export async function getUserFlightParticipations(userId: string): Promise<any[]> {
-  const { data, error } = await supabase
-    .from('flight_participants')
-    .select(`
-      *,
-      flight_groups(departure_city, creator_id)
-    `)
-    .eq('user_id', userId)
-
-  if (error) {
-    console.error('Error fetching user flight participations:', error)
-    return []
-  }
-
-  return data || []
-}
-
 export async function getUserDateParticipations(userId: string): Promise<any[]> {
   const { data, error } = await supabase
     .from('date_participants')
@@ -580,6 +594,23 @@ export async function getUserDateParticipations(userId: string): Promise<any[]> 
 
   if (error) {
     console.error('Error fetching user date participations:', error)
+    return []
+  }
+
+  return data || []
+}
+
+export async function getUserFlightParticipations(userId: string): Promise<any[]> {
+  const { data, error } = await supabase
+    .from('flight_participants')
+    .select(`
+      *,
+      flight_groups(departure_city, creator_id)
+    `)
+    .eq('user_id', userId)
+
+  if (error) {
+    console.error('Error fetching user flight participations:', error)
     return []
   }
 

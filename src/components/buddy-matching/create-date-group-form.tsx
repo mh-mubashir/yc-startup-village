@@ -39,6 +39,16 @@ export function CreateDateGroupForm({ onSuccess }: CreateDateGroupFormProps) {
     },
   })
 
+  // Fixed function to format date without timezone issues
+  const formatDateForAPI = (dateString: string): string => {
+    // Create date object and format as YYYY-MM-DD in local timezone
+    const date = new Date(dateString + 'T00:00:00') // Add time to prevent timezone shift
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
   const onSubmit = async (data: DateGroupForm) => {
     setIsLoading(true)
     setError('')
@@ -50,6 +60,13 @@ export function CreateDateGroupForm({ onSuccess }: CreateDateGroupFormProps) {
         return
       }
 
+      // Format dates to prevent timezone shifting
+      const formattedStartDate = formatDateForAPI(data.startDate)
+      const formattedEndDate = formatDateForAPI(data.endDate)
+
+      console.log('Original dates:', { start: data.startDate, end: data.endDate })
+      console.log('Formatted dates:', { start: formattedStartDate, end: formattedEndDate })
+
       const response = await fetch('/api/date-groups', {
         method: 'POST',
         headers: {
@@ -57,8 +74,8 @@ export function CreateDateGroupForm({ onSuccess }: CreateDateGroupFormProps) {
           'x-access-code': accessCode,
         },
         body: JSON.stringify({
-          start_date: data.startDate,
-          end_date: data.endDate
+          start_date: formattedStartDate,
+          end_date: formattedEndDate
         }),
       })
 
@@ -78,11 +95,14 @@ export function CreateDateGroupForm({ onSuccess }: CreateDateGroupFormProps) {
     }
   }
 
-  const formatDate = (dateString: string) => {
+  const formatDateForDisplay = (dateString: string) => {
     if (!dateString) return ''
-    return new Date(dateString).toLocaleDateString('en-US', {
+    // Create date with time to prevent timezone shift
+    const date = new Date(dateString + 'T00:00:00')
+    return date.toLocaleDateString('en-US', {
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
+      year: 'numeric'
     })
   }
 
@@ -129,7 +149,10 @@ export function CreateDateGroupForm({ onSuccess }: CreateDateGroupFormProps) {
           {form.watch('startDate') && form.watch('endDate') && (
             <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
               <p className="text-blue-800 font-medium">
-                📅 Date Range: {formatDate(form.watch('startDate'))} - {formatDate(form.watch('endDate'))}
+                📅 Date Range: {formatDateForDisplay(form.watch('startDate'))} - {formatDateForDisplay(form.watch('endDate'))}
+              </p>
+              <p className="text-blue-600 text-sm mt-1">
+                ✓ Your exact selected dates will be used for the group
               </p>
             </div>
           )}
@@ -143,7 +166,7 @@ export function CreateDateGroupForm({ onSuccess }: CreateDateGroupFormProps) {
           <div className="bg-green-50 border border-green-200 rounded-md p-4">
             <h4 className="font-medium text-green-800 mb-2">📋 What happens next:</h4>
             <div className="text-sm text-green-700 space-y-1">
-              <p>1. You'll create the date group for your stay dates</p>
+              <p>1. You'll create the date group for your exact stay dates</p>
               <p>2. Other attendees with matching dates can join your group</p>
               <p>3. Everyone can share contact info and coordinate activities</p>
               <p>4. Plan group activities, meals, and explore SF together</p>

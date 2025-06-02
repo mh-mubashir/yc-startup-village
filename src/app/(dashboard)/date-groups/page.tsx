@@ -93,6 +93,7 @@ export default function DateGroupsPage() {
       console.log('Fetch date groups response:', { status: response.status, groupCount: result.groups?.length || 0 })
   
       if (response.ok) {
+        console.log('Sample date group data:', result.groups?.[0])
         setDateGroups(result.groups || [])
       } else {
         console.error('Failed to fetch date groups:', result)
@@ -103,6 +104,7 @@ export default function DateGroupsPage() {
       setLoading(false)
     }
   }
+
   const handleGroupCreated = () => {
     setShowCreateForm(false)
     fetchDateGroups()
@@ -157,8 +159,23 @@ export default function DateGroupsPage() {
     }
   }
 
+  // FIXED: Format date without timezone conversion
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    if (!dateString) return 'Invalid Date'
+    
+    // Handle date string properly to avoid timezone shift
+    let dateToFormat: Date
+    
+    if (dateString.includes('T')) {
+      // If it's already a full ISO string, parse it directly
+      dateToFormat = new Date(dateString)
+    } else {
+      // If it's just YYYY-MM-DD, add time to prevent timezone shift
+      dateToFormat = new Date(dateString + 'T00:00:00')
+    }
+    
+    // Use toLocaleDateString to format without timezone issues
+    return dateToFormat.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric'
     })
