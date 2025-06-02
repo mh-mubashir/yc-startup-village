@@ -56,7 +56,7 @@ export function VerificationForm() {
         // Show success for 4 seconds, then redirect
         setTimeout(() => {
           router.push('/login')
-        }, 5000)
+        }, 15000)
       }
     } catch (error) {
       console.error('Verification error:', error)
