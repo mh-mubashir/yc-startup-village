@@ -260,7 +260,7 @@ export function VerificationForm() {
             <Input
               id="weatherRange"
               {...form.register('weatherRange')}
-              placeholder="e.g., 40-65°F or similar format"
+              placeholder="e.g., 40-65 or similar format"
               disabled={isLoading}
               className="focus:border-orange-500 focus:ring-orange-500"
             />
