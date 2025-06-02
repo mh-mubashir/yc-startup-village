@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAccommodation, getAccommodationsByStatus, getUserByAccessCode, updateUser } from '@/lib/database'
+import { createAccommodation, getAccommodationsByStatus, getUserByAccessCode, updateUser, updateAccommodationStatus } from '@/lib/database'
 
 export async function POST(request: NextRequest) {
   try {
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    // Get all active listings
+    // Get all active listings (excluding deleted ones)
     const listings = await getAccommodationsByStatus('active')
     
     return NextResponse.json({
@@ -91,6 +91,50 @@ export async function GET(request: NextRequest) {
     console.error('Accommodations fetch error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch listings' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { listingId } = await request.json()
+    const accessCode = request.headers.get('x-access-code')
+
+    if (!accessCode) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      )
+    }
+
+    const user = await getUserByAccessCode(accessCode)
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Invalid session' },
+        { status: 401 }
+      )
+    }
+
+    // Soft delete the listing (change status to 'deleted')
+    const success = await updateAccommodationStatus(listingId, user.id, 'deleted')
+    
+    if (!success) {
+      return NextResponse.json(
+        { error: 'Failed to delete listing or unauthorized' },
+        { status: 400 }
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Listing deleted successfully'
+    })
+
+  } catch (error) {
+    console.error('Listing deletion error:', error)
+    return NextResponse.json(
+      { error: 'Failed to delete listing' },
       { status: 500 }
     )
   }

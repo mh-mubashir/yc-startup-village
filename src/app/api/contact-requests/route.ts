@@ -38,10 +38,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Don't allow hosts to request contact for their own listings
+    // Check if the accommodation is deleted
+    if (accommodation.status === 'deleted') {
+      return NextResponse.json(
+        { error: 'This accommodation is no longer available' },
+        { status: 404 }
+      )
+    }
+
+    // IMPORTANT: Don't allow hosts to request contact for their own listings
     if (accommodation.host_id === user.id) {
       return NextResponse.json(
-        { error: 'You cannot request contact for your own listing' },
+        { error: 'You cannot request contact information for your own listing. You can manage your listing from the host dashboard.' },
         { status: 400 }
       )
     }

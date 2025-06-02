@@ -31,9 +31,11 @@ interface Accommodation {
 
 export default function AccommodationsPage() {
   const [user, setUser] = useState<User | null>(null)
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [accommodations, setAccommodations] = useState<Accommodation[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [deletingListing, setDeletingListing] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -53,12 +55,27 @@ export default function AccommodationsPage() {
       accessCode
     })
 
-    // Fetch accommodations
-    fetchAccommodations()
+    // Fetch current user ID and accommodations
+    fetchUserAndAccommodations(accessCode)
   }, [router])
 
-  const fetchAccommodations = async () => {
+  const fetchUserAndAccommodations = async (accessCode: string) => {
     try {
+      // First get current user ID
+      const userResponse = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ accessCode }),
+      })
+
+      if (userResponse.ok) {
+        const userData = await userResponse.json()
+        setCurrentUserId(userData.user.id)
+      }
+
+      // Then fetch accommodations
       const response = await fetch('/api/accommodations')
       const result = await response.json()
 
@@ -69,7 +86,7 @@ export default function AccommodationsPage() {
 
       setAccommodations(result.listings || [])
     } catch (error) {
-      console.error('Error fetching accommodations:', error)
+      console.error('Error fetching data:', error)
       setError('Network error occurred')
     } finally {
       setLoading(false)
@@ -77,8 +94,48 @@ export default function AccommodationsPage() {
   }
 
   const handleContactRequest = (accommodationId: string) => {
-    // We'll implement this next
     router.push(`/accommodations/${accommodationId}/contact`)
+  }
+
+  const handleDeleteListing = async (accommodationId: string) => {
+    if (!confirm('Are you sure you want to delete this listing? It will be removed from public view but kept in our records.')) {
+      return
+    }
+
+    setDeletingListing(accommodationId)
+
+    try {
+      const accessCode = localStorage.getItem('accessCode')
+      const response = await fetch('/api/accommodations', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-code': accessCode!,
+        },
+        body: JSON.stringify({ listingId: accommodationId }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        alert('Failed to delete listing: ' + (result.error || 'Unknown error'))
+        return
+      }
+
+      // Remove the listing from the display
+      setAccommodations(prev => prev.filter(acc => acc.id !== accommodationId))
+      alert('✅ Listing deleted successfully!')
+
+    } catch (error) {
+      console.error('Delete error:', error)
+      alert('❌ Network error occurred. Please try again.')
+    } finally {
+      setDeletingListing(null)
+    }
+  }
+
+  const isOwnListing = (hostId: string) => {
+    return currentUserId && currentUserId === hostId
   }
 
   const formatDate = (dateString: string) => {
@@ -183,9 +240,16 @@ export default function AccommodationsPage() {
                         📍 {accommodation.address}
                       </CardDescription>
                     </div>
-                    <Badge variant="secondary" className="bg-green-100 text-green-800">
-                      {accommodation.available_spots} spots
-                    </Badge>
+                    <div className="flex flex-col items-end space-y-2">
+                      <Badge variant="secondary" className="bg-green-100 text-green-800">
+                        {accommodation.available_spots} spots
+                      </Badge>
+                      {isOwnListing(accommodation.host_id) && (
+                        <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-xs">
+                          Your Listing
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </CardHeader>
                 
@@ -247,14 +311,46 @@ export default function AccommodationsPage() {
                       </div>
                     )}
 
-                    {/* Contact Button */}
-                    <Button 
-                      onClick={() => handleContactRequest(accommodation.id)}
-                      className="w-full bg-orange-500 hover:bg-orange-600"
-                      size="sm"
-                    >
-                      📱 Request Contact Info
-                    </Button>
+                    {/* Action Buttons */}
+                    <div className="space-y-2">
+                      {isOwnListing(accommodation.host_id) ? (
+                        <div className="space-y-2">
+                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                            <p className="text-sm text-blue-700 text-center">
+                              <strong>This is your listing</strong><br />
+                              Manage it from your host dashboard
+                            </p>
+                          </div>
+                          <div className="flex space-x-2">
+                            <Button 
+                              onClick={() => router.push('/host')}
+                              variant="outline"
+                              className="flex-1 text-blue-600 border-blue-300 hover:bg-blue-50"
+                              size="sm"
+                            >
+                              📋 Manage
+                            </Button>
+                            <Button 
+                              onClick={() => handleDeleteListing(accommodation.id)}
+                              disabled={deletingListing === accommodation.id}
+                              variant="outline"
+                              className="flex-1 text-red-600 border-red-300 hover:bg-red-50"
+                              size="sm"
+                            >
+                              {deletingListing === accommodation.id ? '⏳ Deleting...' : '🗑️ Delete'}
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <Button 
+                          onClick={() => handleContactRequest(accommodation.id)}
+                          className="w-full bg-orange-500 hover:bg-orange-600"
+                          size="sm"
+                        >
+                          📱 Request Contact Info
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -268,7 +364,7 @@ export default function AccommodationsPage() {
             💡 How to Connect with Hosts
           </h3>
           <div className="text-sm text-orange-700 space-y-2">
-            <p>1. <strong>Click &quot;Request Contact Info&quot;</strong> on any listing that interests you</p>
+            <p>1. <strong>Click "Request Contact Info"</strong> on any listing that interests you (except your own)</p>
             <p>2. <strong>Write a brief message</strong> introducing yourself and your accommodation needs</p>
             <p>3. <strong>Share your phone number</strong> so the host can contact you back</p>
             <p>4. <strong>Wait for approval</strong> - hosts will review your request and decide whether to share their contact info</p>

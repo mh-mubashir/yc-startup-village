@@ -30,7 +30,7 @@ export interface AccommodationListing {
   house_rules?: string
   available_from: string
   available_until: string
-  status: 'active' | 'inactive' | 'full'
+  status: 'active' | 'inactive' | 'full' | 'deleted'
   created_at: string
   updated_at: string
 }
@@ -142,7 +142,7 @@ export async function createAccommodation(accommodationData: {
   houseRules?: string
   availableFrom: string
   availableUntil: string
-  status: 'active' | 'inactive' | 'full'
+  status: 'active' | 'inactive' | 'full' | 'deleted'
 }): Promise<AccommodationListing> {
   
   // Map camelCase to snake_case for database
@@ -177,7 +177,7 @@ export async function createAccommodation(accommodationData: {
   return listing
 }
 
-export async function getAccommodationsByStatus(status: 'active' | 'inactive' | 'full'): Promise<AccommodationListing[]> {
+export async function getAccommodationsByStatus(status: 'active' | 'inactive' | 'full' | 'deleted'): Promise<AccommodationListing[]> {
   const { data, error } = await supabase
     .from('accommodations')
     .select('*')
@@ -212,6 +212,7 @@ export async function getAccommodationsByHost(hostId: string): Promise<Accommoda
     .from('accommodations')
     .select('*')
     .eq('host_id', hostId)
+    .neq('status', 'deleted') // Exclude deleted listings
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -220,6 +221,29 @@ export async function getAccommodationsByHost(hostId: string): Promise<Accommoda
   }
 
   return data || []
+}
+
+// NEW: Function to update accommodation status (for soft delete)
+export async function updateAccommodationStatus(
+  listingId: string, 
+  hostId: string, 
+  status: 'active' | 'inactive' | 'full' | 'deleted'
+): Promise<boolean> {
+  const { error } = await supabase
+    .from('accommodations')
+    .update({ 
+      status,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', listingId)
+    .eq('host_id', hostId) // Ensure only the owner can modify
+
+  if (error) {
+    console.error('Error updating accommodation status:', error)
+    return false
+  }
+
+  return true
 }
 
 // Contact request functions
