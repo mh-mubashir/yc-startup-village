@@ -115,7 +115,7 @@ export function LoginForm() {
                 href="/recover" 
                 className="block text-red-600 hover:text-gray-700 text-sm"
               >
-                Lost your code? Get help
+                Lost your code? DW We'll resend it to you!
               </a>
             </div>
           </div>
