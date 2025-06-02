@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { CreateListingForm } from '@/components/accommodations/create-listing-form'
 import { PendingRequestsWidget } from '@/components/dashboard/pending-requests-widget'
+import { CurrentConnectionsWidget } from '@/components/dashboard/current-connections-widget'
 
 interface User {
   email: string
@@ -269,21 +270,26 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Enhanced Host Management with Pending Requests Widget */}
+            {/* Enhanced Host Management with Both Widgets */}
             <div className="mb-8">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">🎯 Host Dashboard</h3>
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-6 mb-6">
                 {/* Pending Requests Widget */}
                 <PendingRequestsWidget accessCode={user.accessCode} />
                 
-                {/* Host Management */}
+                {/* NEW: Current Connections Widget */}
+                <CurrentConnectionsWidget accessCode={user.accessCode} />
+              </div>
+              
+              {/* Host Management Actions */}
+              <div className="grid md:grid-cols-2 gap-6">
                 <Card className="border border-orange-200">
                   <CardHeader>
                     <CardTitle className="text-orange-700 flex items-center">
                       🏠 Manage Listings
                     </CardTitle>
                     <CardDescription>
-                      View and manage your accommodation listings and contact requests
+                      View and manage your accommodation listings
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -300,6 +306,36 @@ export default function DashboardPage() {
                         className="w-full bg-orange-500 hover:bg-orange-600"
                       >
                         ➕ Create New Listing
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border border-purple-200">
+                  <CardHeader>
+                    <CardTitle className="text-purple-700 flex items-center">
+                      🌟 Community Stats
+                    </CardTitle>
+                    <CardDescription>
+                      Your impact in the YC community
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600">Profile Complete:</span>
+                        <span className="text-sm font-semibold text-purple-600">100%</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600">Community Member Since:</span>
+                        <span className="text-sm font-semibold text-purple-600">Recently</span>
+                      </div>
+                      <Button 
+                        onClick={() => router.push('/accommodations')}
+                        variant="outline"
+                        className="w-full text-purple-600 border-purple-300 hover:bg-purple-50"
+                      >
+                        🚀 Explore Community
                       </Button>
                     </div>
                   </CardContent>
