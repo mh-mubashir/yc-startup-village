@@ -264,7 +264,7 @@ export default function HomePage() {
           <div className="text-center mb-16">
             <h2 className="text-5xl font-bold text-white mb-6 text-shadow">Why Choose YC Startup Village?</h2>
             <p className="text-xl text-white text-opacity-90 max-w-3xl mx-auto">
-              Built by founders, for founders. Everything you need to make the most of your YC experience.
+              Built by founders, for founders. Everything you need to make the most of your AI Startup School experience.
             </p>
           </div>
 
@@ -324,7 +324,7 @@ export default function HomePage() {
               <div className="text-5xl mb-6">🌟</div>
               <h3 className="text-2xl font-bold text-white mb-4">Built by the Community</h3>
               <p className="text-white text-opacity-80 leading-relaxed">
-                Created by fellow YC attendees who understand your needs. Open source and constantly 
+                Created by fellow Startup School attendees who understand your needs. Open source and constantly 
                 improving based on community feedback.
               </p>
             </div>
