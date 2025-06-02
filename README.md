@@ -365,10 +365,6 @@ Found a bug? Please check existing issues first, then create a new one with:
 - **Discussions**: For questions and community chat
 - **LinkedIn**: Contact the creator directly
 
-## 📄 **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🙏 **Acknowledgments**
 
 - **Y Combinator**: For creating an amazing community (though this project is not officially affiliated)
@@ -378,15 +374,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 **Contact**
 
-**Project Creator**: [Your Name]
-- **LinkedIn**: [Your LinkedIn Profile]
-- **GitHub**: [Your GitHub Profile]
-- **Email**: [Your Email]
+**Project Creator**: Hamza Mubashir
+- **LinkedIn**: https://www.linkedin.com/in/hamza--mubashir/
+- **GitHub**: https://github.com/mh-mubashir/
+- **Email**: mubashir.m@northeastern.edu
 
 **Project Links**:
-- **Live Demo**: [Your Deployed URL]
-- **Repository**: [This GitHub Repo]
-- **Documentation**: [Wiki/Docs Link]
+- **Live Demo**: Launching Soon
+- **Repository**: https://github.com/mh-mubashir/yc-startup-village#
 
 ---
 
