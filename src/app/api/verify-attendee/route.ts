@@ -4,11 +4,11 @@ import { checkEmailExists, checkLinkedInExists, createUser } from '@/lib/databas
 // Correct answers (insider knowledge)
 const CORRECT_ANSWERS = {
   afterpartyHost: 'corgi',
-  afterpartyCount: '19',
+  afterpartyCount: '21',
   parkingInfo: 'no',
   weatherRange: '50-75',
   hotelDiscount: 'YCAI25',
-  ticketTiming: 'day before',
+  ticketTiming: '1 day before',
 }
 
 function normalizeAnswer(answer: string): string {

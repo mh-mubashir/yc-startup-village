@@ -214,7 +214,7 @@ export function VerificationForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="afterpartyHost">Who is hosting the hackathon after parties on day 1? *</Label>
+            <Label htmlFor="afterpartyHost">Who is hosting the hackathon after party on day 1? *</Label>
             <Input
               id="afterpartyHost"
               {...form.register('afterpartyHost')}
@@ -288,7 +288,7 @@ export function VerificationForm() {
             <Input
               id="ticketTiming"
               {...form.register('ticketTiming')}
-              placeholder="e.g., 1 week before, day of event, etc."
+              placeholder="e.g., 1 week before, 1 day after, etc."
               disabled={isLoading}
               className="focus:border-orange-500 focus:ring-orange-500"
             />
