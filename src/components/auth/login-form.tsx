@@ -113,7 +113,7 @@ export function LoginForm() {
               </a>
               <a 
                 href="/recover" 
-                className="block text-red-600 hover:text-gray-700 text-sm"
+                className="block text-red-600 hover:text-gray-700 text-sm font-bold"
               >
                 Lost your code? DW We'll resend it to you!
               </a>
