@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import Link from 'next/link'
 
 const recoverySchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -208,9 +209,9 @@ export default function RecoverPage() {
 
         {/* Back to home */}
         <div className="text-center">
-          <a href="/" className="text-gray-500 hover:text-gray-700 text-sm">
+          <Link href="/" className="text-gray-500 hover:text-gray-700 text-sm">
             ← Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     </div>

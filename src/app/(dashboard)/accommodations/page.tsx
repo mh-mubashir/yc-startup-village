@@ -268,7 +268,7 @@ export default function AccommodationsPage() {
             💡 How to Connect with Hosts
           </h3>
           <div className="text-sm text-orange-700 space-y-2">
-            <p>1. <strong>Click "Request Contact Info"</strong> on any listing that interests you</p>
+            <p>1. <strong>Click &quot;Request Contact Info&quot;</strong> on any listing that interests you</p>
             <p>2. <strong>Write a brief message</strong> introducing yourself and your accommodation needs</p>
             <p>3. <strong>Share your phone number</strong> so the host can contact you back</p>
             <p>4. <strong>Wait for approval</strong> - hosts will review your request and decide whether to share their contact info</p>

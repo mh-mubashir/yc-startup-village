@@ -180,7 +180,7 @@ export function JoinDateGroupForm({ group, onSuccess }: JoinDateGroupFormProps) 
             <Textarea
               id="notes"
               {...form.register('notes')}
-              placeholder="Share what you're interested in doing, places you'd like to visit, or how you'd like to connect..."
+              placeholder="Share what You&apos;re interested in doing, places you'd like to visit, or how you'd like to connect..."
               rows={3}
               disabled={isLoading}
               className="focus:border-orange-500 focus:ring-orange-500"

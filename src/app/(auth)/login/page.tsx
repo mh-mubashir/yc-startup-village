@@ -1,4 +1,5 @@
 import { LoginForm } from '@/components/auth/login-form'
+import Link from 'next/link'
 
 export default function LoginPage() {
   return (
@@ -26,9 +27,9 @@ export default function LoginPage() {
 
         {/* Back to home */}
         <div className="text-center">
-          <a href="/" className="text-gray-500 hover:text-gray-700 text-sm">
+          <Link href="/" className="text-gray-500 hover:text-gray-700 text-sm">
             ← Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     </div>

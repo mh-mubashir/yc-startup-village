@@ -128,7 +128,7 @@ export default function DashboardPage() {
                 🎉 Welcome to YC Startup Village!
               </h2>
               <p className="text-gray-600">
-                You're now connected with the exclusive community of YC AI Startup School attendees.
+                You&apos;re now connected with the exclusive community of YC AI Startup School attendees.
               </p>
             </div>
 

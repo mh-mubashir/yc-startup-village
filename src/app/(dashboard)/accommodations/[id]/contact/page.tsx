@@ -270,7 +270,7 @@ export default function ContactRequestPage({ params }: { params: Promise<{ id: s
                       className="focus:border-orange-500 focus:ring-orange-500"
                     />
                     <p className="text-xs text-gray-500">
-                      Introduce yourself and explain why you're interested in this accommodation
+                      Introduce yourself and explain why You&apos;re interested in this accommodation
                     </p>
                     {form.formState.errors.message && (
                       <p className="text-sm text-red-600">{form.formState.errors.message.message}</p>

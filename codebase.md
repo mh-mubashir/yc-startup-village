@@ -934,7 +934,7 @@ export default function ContactRequestPage({ params }: { params: { id: string } 
                       className="focus:border-orange-500 focus:ring-orange-500"
                     />
                     <p className="text-xs text-gray-500">
-                      Introduce yourself and explain why you're interested in this accommodation
+                      Introduce yourself and explain why You&apos;re interested in this accommodation
                     </p>
                     {form.formState.errors.message && (
                       <p className="text-sm text-red-600">{form.formState.errors.message.message}</p>
@@ -1266,7 +1266,7 @@ export default function AccommodationsPage() {
             💡 How to Connect with Hosts
           </h3>
           <div className="text-sm text-orange-700 space-y-2">
-            <p>1. <strong>Click "Request Contact Info"</strong> on any listing that interests you</p>
+            <p>1. <strong>Click &quot;Request Contact Info&quot;</strong> on any listing that interests you</p>
             <p>2. <strong>Write a brief message</strong> introducing yourself and your accommodation needs</p>
             <p>3. <strong>Share your phone number</strong> so the host can contact you back</p>
             <p>4. <strong>Wait for approval</strong> - hosts will review your request and decide whether to share their contact info</p>
@@ -1412,7 +1412,7 @@ export default function DashboardPage() {
                 🎉 Welcome to YC Startup Village!
               </h2>
               <p className="text-gray-600">
-                You're now connected with the exclusive community of YC AI Startup School attendees.
+                You&apos;re now connected with the exclusive community of YC AI Startup School attendees.
               </p>
             </div>
 
@@ -1964,7 +1964,7 @@ export default function DateGroupsPage() {
                           className="w-full bg-green-100 text-green-800 hover:bg-green-200"
                           variant="outline"
                         >
-                          ✅ You're in this group
+                          ✅ You&apos;re in this group
                         </Button>
                       ) : (
                         <Button 
@@ -2323,7 +2323,7 @@ export default function FlightBuddiesPage() {
                           className="w-full bg-green-100 text-green-800 hover:bg-green-200"
                           variant="outline"
                         >
-                          ✅ You're in this group
+                          ✅ You&apos;re in this group
                         </Button>
                       ) : (
                         <Button 

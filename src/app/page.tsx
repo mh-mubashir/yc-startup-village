@@ -304,7 +304,7 @@ export default function HomePage() {
               <div className="text-5xl mb-6">🔐</div>
               <h3 className="text-2xl font-bold text-white mb-4">Verified Community</h3>
               <p className="text-white text-opacity-80 leading-relaxed">
-                Every member is verified as a YC attendee. Connect with confidence knowing you're 
+                Every member is verified as a YC attendee. Connect with confidence knowing You&apos;re 
                 interacting with fellow founders who share your journey.
               </p>
             </div>
