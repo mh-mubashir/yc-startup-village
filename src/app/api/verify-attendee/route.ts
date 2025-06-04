@@ -4,7 +4,7 @@ import { checkEmailExists, checkLinkedInExists, createUser } from '@/lib/databas
 // Correct answers (insider knowledge)
 const CORRECT_ANSWERS = {
   afterpartyHost: 'corgi',
-  afterpartyCount: '21',
+  afterpartyCount: '22',
   parkingInfo: 'yes',
   weatherRange: '50-75',
   hotelDiscount: 'YCAI25',
